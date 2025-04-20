@@ -6,20 +6,93 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1600</width>
+    <height>900</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QListWidget" name="taskListWidget">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>70</y>
+      <width>741</width>
+      <height>681</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="categoryComboBox">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>270</y>
+      <width>111</width>
+      <height>38</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="moveTaskButton">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>190</y>
+      <width>122</width>
+      <height>43</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>move task</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="addTaskButton">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>130</y>
+      <width>122</width>
+      <height>43</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>add task</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="deleteTaskButton">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>260</y>
+      <width>122</width>
+      <height>43</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>delete task</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="addCategoryButton">
+    <property name="geometry">
+     <rect>
+      <x>31</x>
+      <y>330</y>
+      <width>151</width>
+      <height>43</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>add category</string>
+    </property>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1600</width>
      <height>35</height>
     </rect>
    </property>
