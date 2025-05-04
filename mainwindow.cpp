@@ -10,6 +10,8 @@
 #include <QInputDialog>
 #include <QListWidget>
 #include <QComboBox>
+#include <QListWidgetItem>
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -18,10 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     setFixedSize(1600,900);
     ui->setupUi(this);
     setWindowTitle("Task manager");
-
-    ui->taskListWidget->setDragEnabled(true);
-    ui->taskListWidget->setAcceptDrops(true);
-    ui->taskListWidget->setDragDropMode(QAbstractItemView::InternalMove);
+    setupTaskList();
 
     initializeDatabase();
     loadCategories();
@@ -32,6 +31,14 @@ MainWindow::~MainWindow()
 {
     db.close();
     delete ui;
+}
+
+void MainWindow::setupTaskList()
+{
+    ui->taskListWidget->setDragEnabled(true);
+    ui->taskListWidget->setAcceptDrops(true);
+    ui->taskListWidget->setDragDropMode(QAbstractItemView::InternalMove);
+    ui->taskListWidget->setSelectionMode(QAbstractItemView::ExtendedSelection);
 }
 
 void MainWindow::initializeDatabase()
@@ -174,3 +181,37 @@ void MainWindow::executeQuery(const QString &query)
         QMessageBox::critical(this, "Ошибка базы данных", q.lastError().text());
     }
 }
+
+
+
+void MainWindow::on_deleteCategoryButton_clicked()
+{
+    // Получаем текущую категорию
+    QString categoryToDelete = ui->categoryComboBox->currentText();
+    if (categoryToDelete.isEmpty()) {
+        QMessageBox::warning(this, "Ошибка", "Выберите категорию для удаления!");
+        return;
+    }
+
+    // Удаляем категорию из базы данных (если необходимо)
+    QSqlQuery query;
+    query.prepare("DELETE FROM categories WHERE name = :category");
+    query.bindValue(":category", categoryToDelete);
+
+    if (!query.exec()) {
+        QMessageBox::warning(this, "Ошибка", "Не удалось удалить категорию из базы данных!");
+        return;
+    }
+
+    // Удаляем категорию из ComboBox
+    int indexToDelete = ui->categoryComboBox->currentIndex();
+    if (indexToDelete != -1) {
+        ui->categoryComboBox->removeItem(indexToDelete);
+    }
+
+    QMessageBox::information(this, "Успех", "Категория успешно удалена!");
+
+    // Обновляем список задач
+    refreshTaskList();
+}
+

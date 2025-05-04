@@ -26,6 +26,7 @@ private slots:
     void on_moveTaskButton_clicked();     // Перемещение задачи
     void on_addCategoryButton_clicked();  // Добавление категории
     void on_deleteTaskButton_clicked();   // Удаление задачи
+    void on_deleteCategoryButton_clicked();
 
 private:
     Ui::MainWindow *ui;       // Указатель на интерфейс
@@ -37,5 +38,6 @@ private:
     void loadCategories();        // Загрузка категорий
     int getCurrentTaskId();       // Получение ID выбранной задачи
     void executeQuery(const QString &query); // Выполнение SQL-запросов
+    void setupTaskList();          // Настройка виджета
 };
 #endif // MAINWINDOW_H
