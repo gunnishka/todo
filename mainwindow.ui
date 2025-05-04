@@ -17,18 +17,18 @@
    <widget class="QListWidget" name="taskListWidget">
     <property name="geometry">
      <rect>
-      <x>700</x>
-      <y>70</y>
-      <width>741</width>
-      <height>681</height>
+      <x>300</x>
+      <y>0</y>
+      <width>1300</width>
+      <height>900</height>
      </rect>
     </property>
    </widget>
    <widget class="QComboBox" name="categoryComboBox">
     <property name="geometry">
      <rect>
-      <x>220</x>
-      <y>270</y>
+      <x>60</x>
+      <y>180</y>
       <width>111</width>
       <height>38</height>
      </rect>
@@ -37,67 +37,56 @@
    <widget class="QPushButton" name="moveTaskButton">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>190</y>
-      <width>122</width>
-      <height>43</height>
+      <x>0</x>
+      <y>220</y>
+      <width>300</width>
+      <height>70</height>
      </rect>
     </property>
     <property name="text">
-     <string>move task</string>
+     <string>Изменить категорию</string>
     </property>
    </widget>
    <widget class="QPushButton" name="addTaskButton">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>130</y>
-      <width>122</width>
-      <height>43</height>
+      <x>0</x>
+      <y>0</y>
+      <width>300</width>
+      <height>110</height>
      </rect>
     </property>
     <property name="text">
-     <string>add task</string>
+     <string>Добавить задачу</string>
     </property>
    </widget>
    <widget class="QPushButton" name="deleteTaskButton">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>260</y>
-      <width>122</width>
-      <height>43</height>
+      <x>0</x>
+      <y>110</y>
+      <width>300</width>
+      <height>110</height>
      </rect>
     </property>
     <property name="text">
-     <string>delete task</string>
+     <string>Удалить задачу</string>
     </property>
    </widget>
    <widget class="QPushButton" name="addCategoryButton">
     <property name="geometry">
      <rect>
-      <x>31</x>
-      <y>330</y>
-      <width>151</width>
-      <height>43</height>
+      <x>0</x>
+      <y>800</y>
+      <width>300</width>
+      <height>110</height>
      </rect>
     </property>
     <property name="text">
-     <string>add category</string>
+     <string>Добавить новую категорию</string>
     </property>
    </widget>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1600</width>
-     <height>35</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

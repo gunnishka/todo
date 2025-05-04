@@ -12,8 +12,7 @@
 TaskDialog::TaskDialog(QWidget *parent) : QDialog(parent)
 {
     setWindowTitle("Новая задача");
-    setMinimumSize(300, 200);
-
+    setFixedSize(400,600);
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     // Поле ввода названия

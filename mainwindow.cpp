@@ -15,14 +15,13 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    setFixedSize(1600,900);
     ui->setupUi(this);
+    setWindowTitle("Task manager");
 
-    // Настройка стилей
-    this->setStyleSheet(
-        "QMainWindow { background: #f5f5f5; }"
-        "QListWidget { background: white; border-radius: 5px; }"
-        "QPushButton { background: #4CAF50; color: white; padding: 8px; }"
-        );
+    ui->taskListWidget->setDragEnabled(true);
+    ui->taskListWidget->setAcceptDrops(true);
+    ui->taskListWidget->setDragDropMode(QAbstractItemView::InternalMove);
 
     initializeDatabase();
     loadCategories();
@@ -45,29 +44,6 @@ void MainWindow::initializeDatabase()
         QMessageBox::critical(this, "Ошибка", "Не удалось подключиться к базе данных!");
         return;
     }
-
-    // Создание таблицы категорий
-    executeQuery(
-        "CREATE TABLE IF NOT EXISTS categories ("
-        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-        "name TEXT UNIQUE NOT NULL);"
-        );
-
-    // Создание таблицы задач
-    executeQuery(
-        "CREATE TABLE IF NOT EXISTS tasks ("
-        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-        "title TEXT NOT NULL,"
-        "description TEXT,"
-        "category_id INTEGER,"
-        "FOREIGN KEY(category_id) REFERENCES categories(id));"
-        );
-
-    // Добавление стандартных категорий
-    executeQuery(
-        "INSERT OR IGNORE INTO categories (name) VALUES"
-        "('Сегодня'), ('Завтра'), ('В ближайшее время');"
-        );
 }
 
 void MainWindow::on_addTaskButton_clicked()
