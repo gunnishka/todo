@@ -11,6 +11,8 @@
 #include <QListWidget>
 #include <QComboBox>
 #include <QListWidgetItem>
+#include <QHBoxLayout>
+#include <QLabel>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -137,21 +139,42 @@ void MainWindow::on_addCategoryButton_clicked()
     }
 }
 
-void MainWindow::refreshTaskList()
-{
-    ui->taskListWidget->clear();
-    QSqlQuery query(
-        "SELECT t.id, t.title, c.name FROM tasks t "
-        "JOIN categories c ON t.category_id = c.id"
-        );
+void MainWindow::refreshTaskList() {
+    ui->taskListWidget->clear(); // Очистка списка задач
+
+    QSqlQuery query("SELECT tasks.title, categories.name FROM tasks "
+                    "JOIN categories ON tasks.category_id = categories.id");
 
     while (query.next()) {
-        QString taskText = QString("%1 [%2]").arg(
-            query.value(1).toString(),
-            query.value(2).toString()
-            );
-        QListWidgetItem *item = new QListWidgetItem(taskText, ui->taskListWidget);
-        item->setData(Qt::UserRole, query.value(0)); // Сохраняем ID задачи
+        QString taskTitle = query.value(0).toString();
+        QString categoryName = query.value(1).toString();
+
+        // Создаем пользовательский виджет
+        QWidget *customWidget = new QWidget();
+        QHBoxLayout *layout = new QHBoxLayout(customWidget);
+        layout->setContentsMargins(0, 0, 0, 0); // Убираем отступы
+
+        // Название задачи
+        QLabel *titleLabel = new QLabel(taskTitle);
+        titleLabel->setAlignment(Qt::AlignLeft); // Выравнивание задачи по левому краю
+
+        // Категория задачи
+        QLabel *categoryLabel = new QLabel(categoryName);
+        categoryLabel->setStyleSheet("color: blue; font-weight: bold;"); // Установить цвет и стиль категории
+        categoryLabel->setAlignment(Qt::AlignRight); // Выравнивание категории по правому краю
+
+        // Добавляем виджеты в макет
+        layout->addWidget(titleLabel);
+        layout->addStretch(); // Распределяет пространство между элементами
+        layout->addWidget(categoryLabel);
+
+        customWidget->setLayout(layout);
+
+        // Создаем элемент списка и добавляем кастомный виджет
+        QListWidgetItem *item = new QListWidgetItem(ui->taskListWidget);
+        QSize itemSize(400, 50); // Указываем ширину (400) и высоту (50)
+        item->setSizeHint(itemSize);
+        ui->taskListWidget->setItemWidget(item, customWidget);
     }
 }
 
@@ -181,8 +204,6 @@ void MainWindow::executeQuery(const QString &query)
         QMessageBox::critical(this, "Ошибка базы данных", q.lastError().text());
     }
 }
-
-
 
 void MainWindow::on_deleteCategoryButton_clicked()
 {

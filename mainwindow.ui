@@ -96,13 +96,13 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>270</y>
+      <y>739</y>
       <width>300</width>
-      <height>30</height>
+      <height>61</height>
      </rect>
     </property>
     <property name="text">
-     <string>Удалить категорию</string>
+     <string>Удалить текущую категорию</string>
     </property>
    </widget>
   </widget>
