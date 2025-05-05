@@ -79,32 +79,6 @@
      <string>Удалить задачу</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="addCategoryButton">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>800</y>
-      <width>300</width>
-      <height>110</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Добавить новую категорию</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="deleteCategoryButton">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>739</y>
-      <width>300</width>
-      <height>61</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Удалить текущую категорию</string>
-    </property>
-   </widget>
   </widget>
  </widget>
  <resources/>

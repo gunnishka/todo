@@ -67,7 +67,6 @@ void MainWindow::on_addTaskButton_clicked()
             "VALUES (:title, :desc, (SELECT id FROM categories WHERE name = :category))"
             );
         query.bindValue(":title", dialog.getTitle());
-        query.bindValue(":desc", dialog.getDescription());
         query.bindValue(":category", dialog.getSelectedCategory());
 
         if (!query.exec()) {
@@ -114,67 +113,68 @@ void MainWindow::on_deleteTaskButton_clicked()
     refreshTaskList();
 }
 
-void MainWindow::on_addCategoryButton_clicked()
+void MainWindow::refreshTaskList()
 {
-    bool ok;
-    QString categoryName = QInputDialog::getText(
-        this,
-        "Новая категория",
-        "Введите название категории:",
-        QLineEdit::Normal,
-        "",
-        &ok
+    ui->taskListWidget->clear();
+
+    QSqlQuery query(
+        "SELECT t.id, t.title, c.name FROM tasks t "
+        "JOIN categories c ON t.category_id = c.id"
         );
 
-    if (ok && !categoryName.isEmpty()) {
-        QSqlQuery query;
-        query.prepare("INSERT INTO categories (name) VALUES (:name)");
-        query.bindValue(":name", categoryName);
-
-        if (!query.exec()) {
-            QMessageBox::warning(this, "Ошибка", "Такая категория уже существует!");
-        } else {
-            loadCategories();  // Обновляем список категорий
-        }
-    }
-}
-
-void MainWindow::refreshTaskList() {
-    ui->taskListWidget->clear(); // Очистка списка задач
-
-    QSqlQuery query("SELECT tasks.title, categories.name FROM tasks "
-                    "JOIN categories ON tasks.category_id = categories.id");
-
     while (query.next()) {
-        QString taskTitle = query.value(0).toString();
-        QString categoryName = query.value(1).toString();
+        int taskId = query.value(0).toInt();  // Получаем ID задачи
+        QString taskTitle = query.value(1).toString();  // Название задачи
+        QString categoryName = query.value(2).toString();  // Название категории
 
-        // Создаем пользовательский виджет
+        // Создаем контейнерный виджет
         QWidget *customWidget = new QWidget();
         QHBoxLayout *layout = new QHBoxLayout(customWidget);
-        layout->setContentsMargins(0, 0, 0, 0); // Убираем отступы
+        layout->setContentsMargins(5, 5, 5, 5);  // Восстанавливаем отступы
 
         // Название задачи
         QLabel *titleLabel = new QLabel(taskTitle);
-        titleLabel->setAlignment(Qt::AlignLeft); // Выравнивание задачи по левому краю
+        titleLabel->setAlignment(Qt::AlignLeft);
 
         // Категория задачи
         QLabel *categoryLabel = new QLabel(categoryName);
-        categoryLabel->setStyleSheet("color: blue; font-weight: bold;"); // Установить цвет и стиль категории
-        categoryLabel->setAlignment(Qt::AlignRight); // Выравнивание категории по правому краю
+        categoryLabel->setStyleSheet("color: blue; font-weight: bold;");
+        categoryLabel->setAlignment(Qt::AlignRight);
 
-        // Добавляем виджеты в макет
+        // Кнопка удаления
+        QPushButton *deleteButton = new QPushButton("×");
+        deleteButton->setStyleSheet("color: red; border: none;");
+        deleteButton->setFixedSize(20, 20);
+
+        // Добавляем элементы в макет
         layout->addWidget(titleLabel);
-        layout->addStretch(); // Распределяет пространство между элементами
+        layout->addStretch();
         layout->addWidget(categoryLabel);
+        layout->addWidget(deleteButton);
 
-        customWidget->setLayout(layout);
-
-        // Создаем элемент списка и добавляем кастомный виджет
-        QListWidgetItem *item = new QListWidgetItem(ui->taskListWidget);
-        QSize itemSize(400, 50); // Указываем ширину (400) и высоту (50)
-        item->setSizeHint(itemSize);
+        // Создаем элемент списка
+        QListWidgetItem *item = new QListWidgetItem();
+        item->setSizeHint(customWidget->sizeHint());  // Автоматический размер
+        ui->taskListWidget->addItem(item);
         ui->taskListWidget->setItemWidget(item, customWidget);
+
+        // Подключаем кнопку удаления
+        connect(deleteButton, &QPushButton::clicked, this, [this, taskId]() {
+            deleteTask(taskId);  // Вызываем метод удаления
+        });
+    }
+}
+
+void MainWindow::deleteTask(int taskId)
+{
+    QSqlQuery query;
+    query.prepare("DELETE FROM tasks WHERE id = ?");
+    query.addBindValue(taskId);
+
+    if (query.exec()) {
+        refreshTaskList();  // Обновляем список после удаления
+    } else {
+        QMessageBox::warning(this, "Ошибка", "Не удалось удалить задачу");
     }
 }
 
@@ -204,35 +204,3 @@ void MainWindow::executeQuery(const QString &query)
         QMessageBox::critical(this, "Ошибка базы данных", q.lastError().text());
     }
 }
-
-void MainWindow::on_deleteCategoryButton_clicked()
-{
-    // Получаем текущую категорию
-    QString categoryToDelete = ui->categoryComboBox->currentText();
-    if (categoryToDelete.isEmpty()) {
-        QMessageBox::warning(this, "Ошибка", "Выберите категорию для удаления!");
-        return;
-    }
-
-    // Удаляем категорию из базы данных (если необходимо)
-    QSqlQuery query;
-    query.prepare("DELETE FROM categories WHERE name = :category");
-    query.bindValue(":category", categoryToDelete);
-
-    if (!query.exec()) {
-        QMessageBox::warning(this, "Ошибка", "Не удалось удалить категорию из базы данных!");
-        return;
-    }
-
-    // Удаляем категорию из ComboBox
-    int indexToDelete = ui->categoryComboBox->currentIndex();
-    if (indexToDelete != -1) {
-        ui->categoryComboBox->removeItem(indexToDelete);
-    }
-
-    QMessageBox::information(this, "Успех", "Категория успешно удалена!");
-
-    // Обновляем список задач
-    refreshTaskList();
-}
-

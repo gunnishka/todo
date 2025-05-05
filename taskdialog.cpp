@@ -12,7 +12,7 @@
 TaskDialog::TaskDialog(QWidget *parent) : QDialog(parent)
 {
     setWindowTitle("Новая задача");
-    setFixedSize(400,600);
+    setFixedSize(400,300);
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     // Поле ввода названия
@@ -20,12 +20,6 @@ TaskDialog::TaskDialog(QWidget *parent) : QDialog(parent)
     titleEdit->setPlaceholderText("Название задачи");
     layout->addWidget(new QLabel("Название:"));
     layout->addWidget(titleEdit);
-
-    // Поле ввода описания
-    descEdit = new QTextEdit(this);
-    descEdit->setPlaceholderText("Описание задачи");
-    layout->addWidget(new QLabel("Описание:"));
-    layout->addWidget(descEdit);
 
     // Выбор категории
     categoryCombo = new QComboBox(this);
